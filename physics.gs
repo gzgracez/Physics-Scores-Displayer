@@ -1,9 +1,21 @@
-function myFunction() {
+function allStudents(){
+  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile");
+  var numSheets = spreadsheet.getNumSheets();
+  var names=[];
+  for (var i=1; i<numSheets; i++){
+    names.push(spreadsheet.getSheets()[i].getSheetName());
+  }
+  for (i in names){
+    myFunction(names[i]);
+  }
+}
+
+function myFunction(studentName) {
   var q1 = new Date(2014, 10, 10);
   var q2 = new Date(2015, 0, 20);
   var q3 = new Date(2015, 3, 13);
   
-  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFiles");
+  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile");
   var origSheet = spreadsheet.getSheets()[0];
   var origRange = origSheet.getDataRange();
   var origValues = origRange.getValues();
@@ -12,13 +24,13 @@ function myFunction() {
   var origFontRange = origSheet.getRange("A10:A55");
   var origFonts = origFontRange.getFontWeights();
   
-  var studentSheet =  spreadsheet.getSheetByName("Student1");//Student Name Goes Here
+  var studentSheet =  spreadsheet.getSheetByName(studentName);//Student Name Goes Here
   var sRange = studentSheet.getDataRange();
   var sValues = sRange.getValues();
   var sRows = sRange.getNumRows();
   var sCols = sRange.getNumColumns();
   
-  var scoreSpreadsheet = SpreadsheetApp.openById("ifToResultsGoogleSpreadsheet");
+  var scoreSpreadsheet = SpreadsheetApp.openById("idToNewGoogleSpreadsheet");
   if (scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores")==null){
     origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
   }
@@ -75,11 +87,8 @@ function myFunction() {
       }
     }
   }
-  /*for (var i=0; i<objectives.length; i++){
-    Logger.log(objectives[i] + " : " + proficiencies[i]);
-  }*/
   
-for (var i=0; i<bgColors.length; i++) {
+  for (var i=0; i<bgColors.length; i++) {
    var sTempObjective=fullScoreValues[i+9][0].split(" ")[0];
    for (var j in bgColors[i]) {
      if (bgColors[i][j]=="#cfe2f3"){
@@ -97,7 +106,6 @@ for (var i=0; i<bgColors.length; i++) {
          else {
            scoreValues[i][j]="";
          }
-         //Logger.log(sTempObjective+ " " + q1Index + " " + scoreValues[i][j] + " " + quarter + " " + proficiencies[objectivesRow]);
        }
        else if (quarter==2){
          if ((q2Index-q1Index)>1){
@@ -107,7 +115,6 @@ for (var i=0; i<bgColors.length; i++) {
          else {
            scoreValues[i][j]="";
          }
-         //Logger.log(scoreValues[i][j]);
        }
        else if (quarter==3){
          if ((q3Index-q2Index)>1){
@@ -117,7 +124,6 @@ for (var i=0; i<bgColors.length; i++) {
          else {
            scoreValues[i][j]="";
          }
-         //Logger.log(scoreValues[i][j]);
        }
        else {
          if ((q4Index-q3Index)>1){
@@ -127,10 +133,7 @@ for (var i=0; i<bgColors.length; i++) {
          else {
            scoreValues[i][j]="";
          }
-         //Logger.log(scoreValues[i][j]);
        }
-       //Logger.log(proficiencies[i][j]);
-       //Logger.log(bgColors[i][j]);
      }
    }
   }
