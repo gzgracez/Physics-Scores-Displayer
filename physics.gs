@@ -1,11 +1,11 @@
 function textByStudent(){
-  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile(OneFile)");
+  var spreadsheet = SpreadsheetApp.openById("oneFileForAllStudents");
   var origSheet = spreadsheet.getSheets()[1];
   var origRange = origSheet.getDataRange();
   var origValues = origRange.getValues();
   var origRows = origRange.getNumRows();
   
-  var sSpreadsheet = SpreadsheetApp.openById("idTo"Original"TextFile(SeparateForEachStudent)");
+  var sSpreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
   var sSheet = spreadsheet.getSheets()[0];
   var sRange = origSheet.getDataRange();
   var sValues = origRange.getValues();
@@ -40,8 +40,8 @@ function textByStudent(){
   Logger.log(studentDivs);
 }
 
-function allStudents(){
-  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile");
+function allStudents(){//Run this function! Will generate sheets for all students at once!
+  var spreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
   var numSheets = spreadsheet.getNumSheets();
   var names=[];
   for (var i=1; i<numSheets; i++){
@@ -57,7 +57,7 @@ function myFunction(studentName) {
   var q2 = new Date(2015, 0, 20);
   var q3 = new Date(2015, 3, 13);
   
-  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile");
+  var spreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
   var origSheet = spreadsheet.getSheets()[0];
   var origRange = origSheet.getDataRange();
   var origValues = origRange.getValues();
@@ -66,13 +66,13 @@ function myFunction(studentName) {
   var origFontRange = origSheet.getRange("A10:A55");
   var origFonts = origFontRange.getFontWeights();
   
-  var studentSheet =  spreadsheet.getSheetByName(studentName);//Student Name Goes Here
+  var studentSheet =  spreadsheet.getSheetByName(studentName);
   var sRange = studentSheet.getDataRange();
   var sValues = sRange.getValues();
   var sRows = sRange.getNumRows();
   var sCols = sRange.getNumColumns();
   
-  var scoreSpreadsheet = SpreadsheetApp.openById("idToNewGoogleSpreadsheet");
+  var scoreSpreadsheet = SpreadsheetApp.openById("resultsFile");
   if (scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores")==null){
     origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
   }
@@ -181,4 +181,6 @@ function myFunction(studentName) {
   }
   colorRange.setNumberFormat('@STRING@').setHorizontalAlignment("center").setVerticalAlignment("middle");
   colorRange.setValues(scoreValues);
+  var nameRange=sScoreSheet.getRange("A2");
+  nameRange.setValue(studentName);
 };
