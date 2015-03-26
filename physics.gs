@@ -1,3 +1,45 @@
+function textByStudent(){
+  var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile(OneFile)");
+  var origSheet = spreadsheet.getSheets()[1];
+  var origRange = origSheet.getDataRange();
+  var origValues = origRange.getValues();
+  var origRows = origRange.getNumRows();
+  
+  var sSpreadsheet = SpreadsheetApp.openById("idTo"Original"TextFile(SeparateForEachStudent)");
+  var sSheet = spreadsheet.getSheets()[0];
+  var sRange = origSheet.getDataRange();
+  var sValues = origRange.getValues();
+  var sRows = origRange.getNumRows();
+  
+  var studentNames=[];
+  var studentDivs=[];
+  
+  var tempRowStart=0;
+  for (var i=0; i<origRows; i++){
+    if (origValues[i][0]=="###"){
+      studentNames.push(origValues[i+1][0]);
+      studentDivs.push(i-2);
+      studentDivs.push(i+4);
+    }
+  }
+  studentDivs.push(sRows-1);
+  studentDivs.splice(0,1);
+  for (var i=0; i<studentNames.length; i++){
+    if (sSpreadsheet.getSheetByName(studentNames[i])==null){
+      sSpreadsheet.insertSheet().setName(studentNames[i]);
+    }
+  }
+  
+  for (var i=0; i<studentNames.length; i++){
+    Logger.log(studentDivs[i*2+1]-studentDivs[i*2]);
+    var range=sSpreadsheet.getSheetByName(studentNames[i]).getRange(1,1,(studentDivs[i*2+1]-studentDivs[i*2]+1));
+    var tempRange=origSheet.getRange(studentDivs[i*2]+1,1,(studentDivs[i*2+1]-studentDivs[i*2]+1));
+    var tempValues=tempRange.getValues();
+    range.setValues(tempValues);
+  }
+  Logger.log(studentDivs);
+}
+
 function allStudents(){
   var spreadsheet = SpreadsheetApp.openById("idToOriginalTextFile");
   var numSheets = spreadsheet.getNumSheets();
