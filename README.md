@@ -1,6 +1,6 @@
 # Physics Scores Displayer
 Using Google Apps Script to display students' physics scores on well-formatted Google Sheets
-* Parses text from the original Google Sheet
+* Parses text from the original Google Sheet (one sheet with all students' scores)
   * Organizes student scores by learning objectives and by school quarters
 * Uses data to populate a new Google Spreadsheet
   * Creates separate sheets by the students' names
