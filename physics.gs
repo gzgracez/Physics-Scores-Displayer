@@ -1,11 +1,22 @@
+/*It now works if you have one text file for all the students, with each student separated by "###"!
+Just run allStudents() and the reports for each student should generate!
+*/
+
+/*
+You won't need to generate sheets for each student, one at a time
+You also won't need to enter in student names
+    The code will generate results sheets based on the names of the original sheets
+You just need to copy & paste the text output for each student onto separate sheets in the original Google Sheet!
+*/
+
 function textByStudent(){
-  var spreadsheet = SpreadsheetApp.openById("oneFileForAllStudents");
+  var spreadsheet = SpreadsheetApp.openById("1Zg9iM9QKHmsKKlNlfrk_JId9J3ziRXiVxiSDD__df8M");
   var origSheet = spreadsheet.getSheets()[1];
   var origRange = origSheet.getDataRange();
   var origValues = origRange.getValues();
   var origRows = origRange.getNumRows();
   
-  var sSpreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
+  var sSpreadsheet = SpreadsheetApp.openById("1X2yqkhiZ-SIzF_igEzKvn0dRp6bV9QOWxsglW9-nt2k");
   var sSheet = spreadsheet.getSheets()[0];
   var sRange = origSheet.getDataRange();
   var sValues = origRange.getValues();
@@ -31,17 +42,16 @@ function textByStudent(){
   }
   
   for (var i=0; i<studentNames.length; i++){
-    Logger.log(studentDivs[i*2+1]-studentDivs[i*2]);
     var range=sSpreadsheet.getSheetByName(studentNames[i]).getRange(1,1,(studentDivs[i*2+1]-studentDivs[i*2]+1));
     var tempRange=origSheet.getRange(studentDivs[i*2]+1,1,(studentDivs[i*2+1]-studentDivs[i*2]+1));
     var tempValues=tempRange.getValues();
     range.setValues(tempValues);
   }
-  Logger.log(studentDivs);
 }
 
 function allStudents(){//Run this function! Will generate sheets for all students at once!
-  var spreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
+  textByStudent();
+  var spreadsheet = SpreadsheetApp.openById("1X2yqkhiZ-SIzF_igEzKvn0dRp6bV9QOWxsglW9-nt2k");
   var numSheets = spreadsheet.getNumSheets();
   var names=[];
   for (var i=1; i<numSheets; i++){
@@ -57,7 +67,7 @@ function myFunction(studentName) {
   var q2 = new Date(2015, 0, 20);
   var q3 = new Date(2015, 3, 13);
   
-  var spreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
+  var spreadsheet = SpreadsheetApp.openById("1X2yqkhiZ-SIzF_igEzKvn0dRp6bV9QOWxsglW9-nt2k");
   var origSheet = spreadsheet.getSheets()[0];
   var origRange = origSheet.getDataRange();
   var origValues = origRange.getValues();
@@ -72,7 +82,7 @@ function myFunction(studentName) {
   var sRows = sRange.getNumRows();
   var sCols = sRange.getNumColumns();
   
-  var scoreSpreadsheet = SpreadsheetApp.openById("resultsFile");
+  var scoreSpreadsheet = SpreadsheetApp.openById("16H910KQjeWMM0kCfK2LhCaj0DqAFji6-AueJBo8fRr8");
   if (scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores")==null){
     origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
   }
@@ -92,12 +102,12 @@ function myFunction(studentName) {
   }
   
   for (var i=0; i<objectives.length; i++){
-    proficiencies.push(["q1","q2","q3","q4"]);
+    proficiencies.push([]);
   }
   
   var tempObjective=sValues[1][0].split(" ")[0];
   var tempIndex=objectives.indexOf(tempObjective);
-  var tq1, tq2, tq3, tq4;
+  //var tq1, tq2, tq3, tq4;
   for (var r=2; r<sRows; r++){
     if (sValues[r][0]==""){
       tempObjective=sValues[r+2][0].split(" ")[0];
@@ -105,16 +115,16 @@ function myFunction(studentName) {
       r+=2;
     }
     else{
-      var tempLongDate=sValues[r][0].split(" - ")[0];
+      /*var tempLongDate=sValues[r][0].split(" - ")[0];
       var tempDate=new Date(tempLongDate.split("-")[0],tempLongDate.split("-")[1]-1,tempLongDate.split("-")[2]);
       tq1=proficiencies[tempIndex].indexOf("q1");
       tq2=proficiencies[tempIndex].indexOf("q2");
       tq3=proficiencies[tempIndex].indexOf("q3");
-      tq4=proficiencies[tempIndex].indexOf("q4");
+      tq4=proficiencies[tempIndex].indexOf("q4");*/
       if (sValues[r][0].split(": ")[1]==2){
         var tempQuizNumberBeforeColon=sValues[r][0].split(": ")[0].split(" ");
         var tempQuizNumber=tempQuizNumberBeforeColon[tempQuizNumberBeforeColon.length-1];
-        if (tempDate<q1){
+        /*if (tempDate<q1){
           proficiencies[tempIndex].splice(tq1,0,tempQuizNumber);
         }
         else if (tempDate<q2){
@@ -125,7 +135,8 @@ function myFunction(studentName) {
         }
         else {
           proficiencies[tempIndex].splice(tq4,0,tempQuizNumber);
-        }
+        }*/
+        proficiencies[tempIndex].push(tempQuizNumber);
       }
     }
   }
@@ -134,9 +145,16 @@ function myFunction(studentName) {
    var sTempObjective=fullScoreValues[i+9][0].split(" ")[0];
    for (var j in bgColors[i]) {
      if (bgColors[i][j]=="#cfe2f3"){
-       var quarter=Math.floor(j/3)+1;
+       //var quarter=Math.floor(j/3)+1;
        var objectivesRow=objectives.indexOf(sTempObjective);
-       var q1Index=proficiencies[objectivesRow].indexOf("q1");
+       if (proficiencies[objectivesRow].length!=0){
+           scoreValues[i][j]=proficiencies[objectivesRow][proficiencies[objectivesRow].length-1];
+           proficiencies[objectivesRow].splice(proficiencies[objectivesRow].length-1,proficiencies[objectivesRow].length);
+       }
+       else {
+           scoreValues[i][j]="";
+       }
+       /*var q1Index=proficiencies[objectivesRow].indexOf("q1");
        var q2Index=proficiencies[objectivesRow].indexOf("q2");
        var q3Index=proficiencies[objectivesRow].indexOf("q3");
        var q4Index=proficiencies[objectivesRow].indexOf("q4");
@@ -175,7 +193,7 @@ function myFunction(studentName) {
          else {
            scoreValues[i][j]="";
          }
-       }
+       }*/
      }
    }
   }
