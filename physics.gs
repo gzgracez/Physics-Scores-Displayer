@@ -85,7 +85,7 @@ function myFunction(studentName) {
   var objectives = [];
   var proficiencies = [];//dates & # of 2's
   
-  for (var i=0; i<46; i++) {
+  for (var i=0; i<origRows-17; i++) {
     if (origFonts[i][0]=="normal"){
       objectives.push(origValues[i+9][0].split(" ")[0]);
     }
