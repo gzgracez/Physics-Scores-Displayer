@@ -40,7 +40,8 @@ function textByStudent(){
   Logger.log(studentDivs);
 }
 
-function allStudents(){//Run this function! Will generate sheets for all students at once!
+function allStudents(){//Run this function! Will generate sheets for all students at once!'
+  textByStudent();
   var spreadsheet = SpreadsheetApp.openById("filesForSeparateStudents");
   var numSheets = spreadsheet.getNumSheets();
   var names=[];
@@ -74,6 +75,11 @@ function myFunction(studentName) {
   
   var scoreSpreadsheet = SpreadsheetApp.openById("resultsFile");
   if (scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores")==null){
+    origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
+  }
+  else{
+    var tempStudentScoreSheet = scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores");
+    scoreSpreadsheet.deleteSheet(tempStudentScoreSheet);
     origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
   }
   var sScoreSheet=scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores");
