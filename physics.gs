@@ -75,6 +75,11 @@ function myFunction(studentName) {
   if (scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores")==null){
     origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
   }
+  else{
+    var tempStudentScoreSheet = scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores");
+    scoreSpreadsheet.deleteSheet(tempStudentScoreSheet);
+    origSheet.copyTo(scoreSpreadsheet).setName(studentSheet.getName() + " Scores");
+  }
   var sScoreSheet=scoreSpreadsheet.getSheetByName(studentSheet.getName() + " Scores");
   var colorRange = sScoreSheet.getRange("B10:M55");
   var bgColors = colorRange.getBackgrounds();
@@ -83,8 +88,7 @@ function myFunction(studentName) {
   
   var objectives = [];
   var proficiencies = [];//dates & # of 2's
-  
-  Logger.log(origRows);
+
   for (var i=0; i<origRows-17; i++) {
     if (origFonts[i][0]=="normal"){
       objectives.push(origValues[i+9][0].split(" ")[0]);
